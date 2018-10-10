@@ -20,7 +20,7 @@
     <tr>
     <c:forEach items="${meals}" var="meal">
         <tr style="color: ${meal.isExceed() ? '#ff0000' : '#00ff00'};">
-            <td><p>${f:formatLocalDateTime(meal.getDateTime(), 'dd.MM.yyyy HH:mm:ss')}</p></td>
+            <td><p>${f:formatLocalDateTime(meal.getDateTime())}</p></td>
             <td>${meal.getDescription()}</td>
             <td>${meal.getCalories()}</td>
 

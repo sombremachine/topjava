@@ -3,16 +3,16 @@ package ru.javawebinar.topjava.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MealDAOFactory {
-    private static final Logger LOG = LoggerFactory.getLogger(MealDAOFactory.class);
+public class MealDaoFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(MealDaoFactory.class);
     public static enum DAOSources{
         memory
     }
 
-    public static MealDAO getMealDAO(DAOSources src){
+    public static MealDao getMealDAO(DAOSources src){
         switch (src){
             case memory:{
-                return new MealDAOMemoryImpl();
+                return new MealDaoMemoryImpl();
             }
             default:{
                 LOG.debug("dao source unrecognized: " + src);

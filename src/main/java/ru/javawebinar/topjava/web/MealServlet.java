@@ -1,8 +1,8 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.dao.MealDAO;
-import ru.javawebinar.topjava.dao.MealDAOFactory;
+import ru.javawebinar.topjava.dao.MealDao;
+import ru.javawebinar.topjava.dao.MealDaoFactory;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealWithExceed;
 
@@ -23,64 +23,48 @@ import static ru.javawebinar.topjava.util.MealsUtil.getFilteredWithExceeded;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
-    private static MealDAO mealDAO = MealDAOFactory.getMealDAO(MealDAOFactory.DAOSources.memory);
-
+    private static MealDao mealDao = MealDaoFactory.getMealDAO(MealDaoFactory.DAOSources.memory);
+    private static final int maxCalories = 2000;
 
     @Override
-    public void init() throws ServletException {
-        super.init();
-        mealDAO.addMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 1,2), "Завтрак", 500));
-        mealDAO.addMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 2), "Обед", 1000));
-        mealDAO.addMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 3), "Ужин", 490));
-        mealDAO.addMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 4), "Завтрак", 1000));
-        mealDAO.addMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 5), "Обед", 500));
-        mealDAO.addMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 6), "Ужин", 510));
+    public void init(){
+        mealDao.create(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 1,2), "Завтрак", 500));
+        mealDao.create(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 2), "Обед", 1000));
+        mealDao.create(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 3), "Ужин", 490));
+        mealDao.create(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 4), "Завтрак", 1000));
+        mealDao.create(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 5), "Обед", 500));
+        mealDao.create(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 6), "Ужин", 510));
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("doGet()");
-        Integer maxCalories = 2000;  //не сказано откуда брать
-        try{
-            String parameterMax = request.getParameter("max");
-            if (parameterMax != null) {
-                maxCalories = Integer.parseInt(parameterMax);
-                log.debug("parameter max = " + maxCalories);
-            }
-        }
-        catch (Exception e){
-            StringWriter stack = new StringWriter();
-            e.printStackTrace(new PrintWriter(stack));
-            log.error(stack.toString());
-        }
-
         String action = request.getParameter("action");
         log.debug("action = " + action);
         try {
             switch (String.valueOf(action).toLowerCase()) {
+                case "delete": {
+                    log.debug("case delete");
+                    Long id = Long.parseLong(request.getParameter("id"));
+                    mealDao.delete(id);
+                    log.debug("redirect to meals");
+                    response.sendRedirect("meals");
+                    break;
+                }
                 case "update": {
                     log.debug("case update");
                     Long id = Long.parseLong(request.getParameter("id"));
-                    Meal editMeal = mealDAO.getMeal(id);
+                    Meal editMeal = mealDao.read(id);
                     request.setAttribute("editMeal", editMeal);
                 }
                 default:{
                     log.debug("case default, show list");
-                    List<MealWithExceed> filteredWithExceeded = getFilteredWithExceeded(mealDAO.getAllMeal(), LocalTime.MIN, LocalTime.MAX, maxCalories);
+                    List<MealWithExceed> filteredWithExceeded = getFilteredWithExceeded(mealDao.getAll(), LocalTime.MIN, LocalTime.MAX, maxCalories);
                     request.setAttribute("meals", filteredWithExceeded);
                     log.debug("forward to meals");
                     request.getRequestDispatcher("/meals.jsp").forward(request, response);
                     break;
                 }
-                case "delete": {
-                    log.debug("case delete");
-                    Long id = Long.parseLong(request.getParameter("id"));
-                    mealDAO.deleteMeal(id);
-                    log.debug("redirect to meals");
-                    response.sendRedirect("meals");
-                    break;
-                }
-
             }
         }
         catch (Exception e){
@@ -104,12 +88,14 @@ public class MealServlet extends HttpServlet {
             LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("datetime"));
             switch (String.valueOf(action).toLowerCase()) {
                 case "create": {
-                    mealDAO.addMeal(new Meal(dateTime, description, calories));
+                    log.debug("case create");
+                    mealDao.create(new Meal(dateTime, description, calories));
                     break;
                 }
                 case "update": {
+                    log.debug("case update");
                     Long id = Long.parseLong(request.getParameter("id"));
-                    mealDAO.updateMeal(new Meal(id,dateTime, description, calories));
+                    mealDao.update(new Meal(id,dateTime, description, calories));
                     break;
                 }
             }
