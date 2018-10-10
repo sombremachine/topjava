@@ -36,6 +36,12 @@ public class MealServlet extends HttpServlet {
         mealDao.create(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 6), "Ужин", 510));
     }
 
+    private void logStacktrace(Exception e){
+        StringWriter stack = new StringWriter();
+        e.printStackTrace(new PrintWriter(stack));
+        log.error(stack.toString());
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("doGet()");
@@ -68,9 +74,7 @@ public class MealServlet extends HttpServlet {
             }
         }
         catch (Exception e){
-            StringWriter stack = new StringWriter();
-            e.printStackTrace(new PrintWriter(stack));
-            log.error(stack.toString());
+            logStacktrace(e);
             log.debug("redirect to meals");
             response.sendRedirect("meals");
         }
@@ -101,9 +105,7 @@ public class MealServlet extends HttpServlet {
             }
         }
         catch (Exception e){
-            StringWriter stack = new StringWriter();
-            e.printStackTrace(new PrintWriter(stack));
-            log.error(stack.toString());
+            logStacktrace(e);
         }
         finally {
             log.debug("redirect to meals");
