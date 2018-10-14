@@ -31,11 +31,9 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public void delete(int userId, int mealId) {
-        repository.computeIfPresent(userId,(uid, mealMap) ->{
-            mealMap.remove(mealId);
-            return mealMap.isEmpty() ? null : mealMap;
-        });
+    public boolean delete(int userId, int mealId) {
+        return repository.getOrDefault(userId,Collections.emptyMap()).remove(mealId) != null;
+
     }
 
     @Override
