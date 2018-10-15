@@ -10,5 +10,14 @@
     <li><a href="users">Users</a></li>
     <li><a href="meals">Meals</a></li>
 </ul>
+<form method="post" action="users">
+    <input type="hidden" name="action" value = "switch_user">
+    <select name="newUserId">
+        <option value="1">1</option>
+        <option value="2">2</option>
+    </select>
+    <br>
+    <button type="submit">Сменить пользователя</button>
+</form>
 </body>
 </html>

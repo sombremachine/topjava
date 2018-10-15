@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.repository.mock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
@@ -23,7 +25,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(x -> this.save(1,x));
+        MealsUtil.MEALS.forEach(x -> this.save(1,new Meal(x)));
+        MealsUtil.MEALS.forEach(x -> this.save(2,new Meal(x)));
     }
 
     @Override
@@ -55,7 +58,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getFiltered(int userId, LocalDate dateFrom, LocalDate dateTo) {
-        return getAll(userId).stream().filter(x -> isBetween(x.getDate(),dateFrom,dateFrom)).collect(Collectors.toList());
+        return getAll(userId).stream().filter(x -> isBetween(x.getDate(),dateFrom,dateTo)).collect(Collectors.toList());
     }
 }
 

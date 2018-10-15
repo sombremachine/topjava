@@ -20,8 +20,8 @@ public class MealServiceImpl implements MealService {
     private MealRepository repository;
 
     @Override
-    public List<Meal> getAll(int userId) {
-        return repository.getAll(userId);
+    public List<MealWithExceed> getAll(int userId, int calories) {
+        return getFilteredWithExceeded(repository.getAll(userId),calories,LocalTime.MIN,LocalTime.MAX);
     }
 
     @Override
@@ -46,6 +46,6 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public void update(int userId, Meal meal, int mealId) {
-        checkNotFoundWithId(repository.delete(userId, mealId), mealId);
+        checkNotFoundWithId(repository.save(userId, meal), mealId);
     }
 }

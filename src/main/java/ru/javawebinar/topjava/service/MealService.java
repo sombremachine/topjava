@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 public interface MealService {
-    List<Meal> getAll(int userId);
+    List<MealWithExceed> getAll(int userId, int calories);
 
     List<MealWithExceed> getFiltered(int userId, int calories, LocalDate dateFrom, LocalDate dateTo, LocalTime timeFrom, LocalTime timeTo);
 
