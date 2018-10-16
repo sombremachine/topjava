@@ -23,7 +23,7 @@
     <a href="meals?action=create">Add Meal</a>
     <hr/>
 
-    <form method="post" action="meals">
+    <form method="get" action="meals">
     <table>
         <tr>
             <th>От даты</th>
@@ -34,16 +34,15 @@
             <th></th>
         </tr>
         <tr>
-            <td><input type="date" name="dateFrom" value="${dateFrom}"></td>
-            <td><input type="date" name="dateTo" value="${dateTo}"></td>
-            <td><input type="time" name="timeFrom" value="${timeFrom}"></td>
-            <td><input type="time" name="timeTo" value="${timeTo}"></td>
-            <td><input type="hidden" name="action" value = "filter"><button type="submit">Отфильтровать</button></td>
+            <td><input type="date" name="dateFrom" value="<%= request.getParameter("dateFrom") %>"></td>
+            <td><input type="date" name="dateTo" value="<%= request.getParameter("dateTo") %>"></td>
+            <td><input type="time" name="timeFrom" value="<%= request.getParameter("timeFrom") %>"></td>
+            <td><input type="time" name="timeTo" value="<%= request.getParameter("timeTo") %>"></td>
+            <td><button type="submit">Отфильтровать</button></td>
             <td><a href="meals">Сбросить</a></td>
         </tr>
     </table>
     </form>
-
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>

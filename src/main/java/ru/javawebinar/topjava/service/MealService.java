@@ -18,5 +18,5 @@ public interface MealService {
 
     void delete(int userId, int mealId);
 
-    void update(int userId, Meal meal, int mealId);
+    void update(int userId, Meal meal);
 }

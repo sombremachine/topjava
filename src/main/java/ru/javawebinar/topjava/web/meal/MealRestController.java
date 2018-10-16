@@ -24,39 +24,39 @@ public class MealRestController {
     @Autowired
     private MealService service;
 
-    public Meal get(int mealId){
-        log.debug("get for userId = {}, mealId = {}",authUserId(), mealId);
+    public Meal get(int mealId) {
+        log.debug("get for userId = {}, mealId = {}", authUserId(), mealId);
         return service.get(authUserId(), mealId);
     }
 
-    public List<MealWithExceed> getAll(){
-        log.debug("getAll for userId = {}",authUserId());
+    public List<MealWithExceed> getAll() {
+        log.debug("getAll for userId = {}", authUserId());
         return service.getAll(authUserId(), authUserCaloriesPerDay());
     }
 
-    public Meal create(Meal meal){
+    public Meal create(Meal meal) {
         checkNew(meal);
-        log.debug("create for userId = {}",authUserId());
+        log.debug("create for userId = {}", authUserId());
         return service.create(authUserId(), meal);
     }
 
-    public void delete(int mealId){
-        log.debug("delete for userId = {}, mealId = {}",authUserId(), mealId);
+    public void delete(int mealId) {
+        log.debug("delete for userId = {}, mealId = {}", authUserId(), mealId);
         service.delete(authUserId(), mealId);
     }
 
-    public void update(Meal meal,int mealId){
+    public void update(Meal meal, int mealId) {
         assureIdConsistent(meal, mealId);
-        log.debug("update for userId = {}, mealId = {}",authUserId(), mealId);
-        service.update(authUserId(), meal, mealId);
+        log.debug("update for userId = {}, mealId = {}", authUserId(), mealId);
+        service.update(authUserId(), meal);
     }
 
-    public List<MealWithExceed> getFiltered(LocalDate dateFrom, LocalDate dateTo, LocalTime timeFrom, LocalTime timeTo){
-        log.debug("getFiltered for userId = {}",authUserId());
+    public List<MealWithExceed> getFiltered(LocalDate dateFrom, LocalDate dateTo, LocalTime timeFrom, LocalTime timeTo) {
+        log.debug("getFiltered for userId = {}", authUserId());
         return service.getFiltered(authUserId(), authUserCaloriesPerDay(),
-                (dateFrom == null)?LocalDate.MIN:dateFrom,
-                (dateTo == null)?LocalDate.MAX:dateTo,
-                (timeFrom == null)?LocalTime.MIN:timeFrom,
-                (timeTo == null)?LocalTime.MAX:timeTo);
+                (dateFrom == null) ? LocalDate.MIN : dateFrom,
+                (dateTo == null) ? LocalDate.MAX : dateTo,
+                (timeFrom == null) ? LocalTime.MIN : timeFrom,
+                (timeTo == null) ? LocalTime.MAX : timeTo);
     }
 }
