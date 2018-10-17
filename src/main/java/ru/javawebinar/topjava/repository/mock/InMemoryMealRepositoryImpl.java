@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.util.DateTimeUtil.isBetween;
@@ -48,14 +49,18 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        return getFiltered(userId, LocalDate.MIN, LocalDate.MAX);
+        return getAllWithPredicateFilter(userId, meal -> true);
     }
 
     @Override
     public List<Meal> getFiltered(int userId, LocalDate dateFrom, LocalDate dateTo) {
+        return getAllWithPredicateFilter(userId, meal -> isBetween(meal.getDate(), dateFrom, dateTo));
+    }
+
+    private List<Meal> getAllWithPredicateFilter(int userId,Predicate<Meal> filter){
         Map<Integer, Meal> userMealMap = repository.get(userId);
         return (userMealMap == null) ? Collections.emptyList() : userMealMap.values().stream()
-                .filter(x -> isBetween(x.getDate(), dateFrom, dateTo))
+                .filter(filter)
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());
     }

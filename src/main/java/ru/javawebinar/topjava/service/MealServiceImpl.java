@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.MealsUtil.getFilteredWithExceeded;
+import static ru.javawebinar.topjava.util.MealsUtil.getWithExceeded;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
@@ -21,7 +22,7 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public List<MealWithExceed> getAll(int userId, int calories) {
-        return getFilteredWithExceeded(repository.getAll(userId),calories,LocalTime.MIN,LocalTime.MAX);
+        return getWithExceeded(repository.getAll(userId),calories);
     }
 
     @Override

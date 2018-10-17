@@ -34,10 +34,10 @@
             <th></th>
         </tr>
         <tr>
-            <td><input type="date" name="dateFrom" value="<%= request.getParameter("dateFrom") %>"></td>
-            <td><input type="date" name="dateTo" value="<%= request.getParameter("dateTo") %>"></td>
-            <td><input type="time" name="timeFrom" value="<%= request.getParameter("timeFrom") %>"></td>
-            <td><input type="time" name="timeTo" value="<%= request.getParameter("timeTo") %>"></td>
+            <td><input type="date" name="dateFrom" value="${param.dateFrom}"></td>
+            <td><input type="date" name="dateTo" value="${param.dateTo}"></td>
+            <td><input type="time" name="timeFrom" value="${param.timeFrom}"></td>
+            <td><input type="time" name="timeTo" value="${param.timeTo}"></td>
             <td><button type="submit">Отфильтровать</button></td>
             <td><a href="meals">Сбросить</a></td>
         </tr>
