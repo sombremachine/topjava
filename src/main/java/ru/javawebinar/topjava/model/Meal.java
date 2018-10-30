@@ -34,7 +34,7 @@ public class Meal extends AbstractBaseEntity {
     @NotBlank
     private String description;
 
-    @Column(name = "calories", columnDefinition = "int default 500")
+    @Column(name = "calories")
     @Range(min = 10, max = 10000)
     private int calories;
 
@@ -96,17 +96,6 @@ public class Meal extends AbstractBaseEntity {
     public void setUser(User user) {
         this.user = user;
     }
-
-//    @Override
-//    public String toString() {
-//        return "Meal{" +
-//                "id=" + id +
-//                ", dateTime=" + dateTime +
-//                ", description='" + description + '\'' +
-//                ", calories=" + calories +
-//                '}';
-//    }
-
 
     @Override
     public String toString() {
