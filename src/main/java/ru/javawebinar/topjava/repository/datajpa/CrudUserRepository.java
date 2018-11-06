@@ -27,7 +27,6 @@ public interface CrudUserRepository extends JpaRepository<User, Integer> {
     Optional<User> findById(Integer id);
 
     @Override
-    @Query("DELETE FROM User u WHERE u.id=:id")
     List<User> findAll(Sort sort);
 
     User getByEmail(String email);
