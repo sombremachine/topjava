@@ -7,7 +7,6 @@ import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
-import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import java.util.Collections;
 
@@ -86,13 +85,62 @@ class AdminRestControllerTest extends AbstractControllerTest {
         User updated = new User(USER);
         updated.setName("UpdatedName");
         updated.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
+        updated.setPassword("newPass");
         mockMvc.perform(put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
-                .content(JsonUtil.writeValue(updated)))
+                .content(jsonWithPassword(updated, "newPass")))
                 .andExpect(status().isNoContent());
 
         assertMatch(userService.get(USER_ID), updated);
+    }
+
+    @Test
+    void testUpdateDuplicateEmail() throws Exception {
+        User updated = new User(USER);
+        updated.setName("UpdatedName");
+        updated.setEmail("admin@gmail.com");
+        updated.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
+        updated.setPassword("newPass");
+        mockMvc.perform(put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(jsonWithPassword(updated, "newPass")))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void testCreateDuplicateEmail() throws Exception {
+        User expected = new User(null, "New", "admin@gmail.com", "newPass", 2300, Role.ROLE_USER, Role.ROLE_ADMIN);
+        ResultActions action = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(jsonWithPassword(expected, "newPass")))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void testUpdateNotValid() throws Exception {
+        User updated = new User(USER);
+        updated.setName("");
+        updated.setEmail("a@gmail.com");
+        updated.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
+        updated.setPassword("newPass");
+        mockMvc.perform(put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(jsonWithPassword(updated, "newPass")))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void testCreateNotValid() throws Exception {
+        User expected = new User(null, "", "a@gmail.com", "newPass", 2300, Role.ROLE_USER, Role.ROLE_ADMIN);
+        ResultActions action = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(jsonWithPassword(expected, "newPass")))
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
